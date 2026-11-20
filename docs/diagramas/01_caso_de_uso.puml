@@ -1,0 +1,25 @@
+@startuml
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam usecaseBackgroundColor #E8F0F8
+skinparam usecaseBorderColor #1F4E79
+skinparam actorBorderColor #1F4E79
+left to right direction
+actor "Bibliotecário" as B
+rectangle "BiblioTech" {
+  usecase "UC01 - Gerenciar Livros" as UC1
+  usecase "UC02 - Gerenciar Leitores" as UC2
+  usecase "UC03 - Registrar Empréstimo" as UC3
+  usecase "UC04 - Registrar Devolução" as UC4
+  usecase "UC05 - Consultar Empréstimos" as UC5
+  usecase "Verificar disponibilidade\ne situação do leitor" as V
+}
+B --> UC1
+B --> UC2
+B --> UC3
+B --> UC4
+B --> UC5
+UC3 ..> V : <<include>>
+UC4 .> UC5 : <<extend>>
+@enduml

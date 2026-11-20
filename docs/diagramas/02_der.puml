@@ -1,0 +1,42 @@
+@startuml
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam linetype ortho
+skinparam classBackgroundColor #FFFFFF
+skinparam classBorderColor #1F4E79
+skinparam classHeaderBackgroundColor #E8F0F8
+hide circle
+hide methods
+entity "LIVRO" as livro {
+  * id : INTEGER <<PK>>
+  --
+  * titulo : TEXT
+  * autor : TEXT
+  * isbn : TEXT <<UNIQUE>>
+  editora : TEXT
+  ano_publicacao : INTEGER
+  * quantidade_total : INTEGER
+  * criado_em : TEXT
+}
+entity "LEITOR" as leitor {
+  * id : INTEGER <<PK>>
+  --
+  * nome : TEXT
+  * cpf : TEXT <<UNIQUE>>
+  * email : TEXT <<UNIQUE>>
+  telefone : TEXT
+  * criado_em : TEXT
+}
+entity "EMPRESTIMO" as emp {
+  * id : INTEGER <<PK>>
+  --
+  * livro_id : INTEGER <<FK>>
+  * leitor_id : INTEGER <<FK>>
+  * data_emprestimo : TEXT
+  * data_prevista_devolucao : TEXT
+  data_devolucao : TEXT
+}
+livro ||--o{ emp : "é emprestado em"
+leitor ||--o{ emp : "realiza"
+@enduml

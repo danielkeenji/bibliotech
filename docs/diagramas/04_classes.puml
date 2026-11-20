@@ -1,0 +1,45 @@
+@startuml
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam classBackgroundColor #FFFFFF
+skinparam classBorderColor #1F4E79
+skinparam classHeaderBackgroundColor #E8F0F8
+hide circle
+class Livro {
+  - id : int
+  - titulo : str
+  - autor : str
+  - isbn : str
+  - editora : str
+  - ano_publicacao : int
+  - quantidade_total : int
+  - emprestados : int
+  --
+  + quantidade_disponivel() : int
+  + esta_disponivel() : bool
+  + validar() : void
+}
+class Leitor {
+  - id : int
+  - nome : str
+  - cpf : str
+  - email : str
+  - telefone : str
+  --
+  + validar() : void
+}
+class Emprestimo {
+  - id : int
+  - data_emprestimo : date
+  - data_prevista_devolucao : date
+  - data_devolucao : date
+  --
+  + status() : str
+  + esta_atrasado(hoje) : bool
+  + dias_atraso(hoje) : int
+  + registrar_devolucao(data) : void
+}
+Leitor "1" -- "0..*" Emprestimo : realiza >
+Livro "1" -- "0..*" Emprestimo : < refere-se a
+@enduml

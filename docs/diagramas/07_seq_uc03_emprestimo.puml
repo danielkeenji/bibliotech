@@ -1,0 +1,37 @@
+@startuml
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequenceParticipantBackgroundColor #E8F0F8
+skinparam sequenceParticipantBorderColor #1F4E79
+skinparam sequenceLifeLineBorderColor #1F4E79
+skinparam sequenceActorBorderColor #1F4E79
+autonumber
+title UC03 - Registrar Empréstimo
+actor "Bibliotecário" as B
+participant "Interface\n(templates)" as UI
+participant "Controlador\n(app.py)" as C
+participant "EmprestimoRepository" as R
+participant "LivroRepository" as LR
+participant "LeitorRepository" as RR
+database "SQLite" as DB
+B -> UI : Seleciona livro e leitor
+UI -> C : POST /emprestimos/novo
+C -> R : registrar(livro_id, leitor_id)
+R -> LR : buscar_por_id(livro_id)
+LR -> DB : SELECT livro + emprestados
+DB --> LR : livro
+R -> RR : buscar_por_id(leitor_id)
+RR -> DB : SELECT leitor
+DB --> RR : leitor
+R -> R : verifica disponibilidade,\natrasos e limite de 3
+alt regra violada
+  R --> C : RegraNegocioError
+  C --> UI : exibe motivo da recusa
+else permitido
+  R -> DB : INSERT emprestimo (prazo = hoje + 14 dias)
+  DB --> R : id
+  R --> C : Emprestimo
+  C --> UI : redireciona + "Empréstimo registrado"
+end
+@enduml

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar' if leitor.id else 'Novo' }} leitor{% endblock %}
+{% block conteudo %}
+<h1>{{ 'Editar' if leitor.id else 'Novo' }} leitor</h1>
+<form method="post" class="formulario">
+  <label>Nome completo*<input name="nome" value="{{ leitor.nome }}" required></label>
+  <div class="linha">
+    <label>CPF*<input name="cpf" value="{{ leitor.cpf }}" placeholder="000.000.000-00" required></label>
+    <label>Telefone<input name="telefone" value="{{ leitor.telefone }}"></label>
+  </div>
+  <label>E-mail*<input name="email" type="email" value="{{ leitor.email }}" required></label>
+  <div class="botoes"><button class="btn">Salvar</button><a href="{{ url_for('leitores_listar') }}">Cancelar</a></div>
+</form>
+{% endblock %}

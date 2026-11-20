@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titulo %}Empréstimos{% endblock %}
+{% block conteudo %}
+<div class="cabecalho"><h1>Empréstimos</h1><a class="btn" href="{{ url_for('emprestimos_novo') }}">+ Novo empréstimo</a></div>
+<div class="filtros">
+  {% for chave, nome in [('todos','Todos'),('ativos','Ativos'),('atrasados','Atrasados'),('devolvidos','Devolvidos')] %}
+    <a class="{{ 'ativo' if filtro == chave }}" href="{{ url_for('emprestimos_listar', filtro=chave, q=busca) }}">{{ nome }}</a>
+  {% endfor %}
+</div>
+<form class="busca"><input type="hidden" name="filtro" value="{{ filtro }}"><input name="q" value="{{ busca }}" placeholder="Buscar por livro ou leitor"><button>Buscar</button></form>
+{% if emprestimos %}
+<table>
+  <thead><tr><th>Livro</th><th>Leitor</th><th>Empréstimo</th><th>Previsto</th><th>Devolução</th><th>Status</th><th></th></tr></thead>
+  <tbody>{% for e in emprestimos %}
+    <tr>
+      <td>{{ e.livro_titulo }}</td><td>{{ e.leitor_nome }}</td>
+      <td>{{ e.data_emprestimo|data_br }}</td><td>{{ e.data_prevista_devolucao|data_br }}</td><td>{{ e.data_devolucao|data_br }}</td>
+      <td><span class="tag {{ {'Ativo':'ok','Atrasado':'erro','Devolvido':'neutro'}[e.status] }}">{{ e.status }}</span></td>
+      <td class="acoes">
+        {% if not e.data_devolucao %}
+          <form method="post" action="{{ url_for('emprestimos_devolver', emprestimo_id=e.id) }}"><button class="link">Devolver</button></form>
+          <a href="{{ url_for('emprestimos_editar', emprestimo_id=e.id) }}">Prazo</a>
+        {% endif %}
+        <form method="post" action="{{ url_for('emprestimos_excluir', emprestimo_id=e.id) }}" onsubmit="return confirm('Excluir este registro?')"><button class="link perigo">Excluir</button></form>
+      </td>
+    </tr>
+  {% endfor %}</tbody>
+</table>
+{% else %}<p class="vazio">Nenhum empréstimo encontrado.</p>{% endif %}
+{% endblock %}

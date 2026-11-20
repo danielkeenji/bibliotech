@@ -1,0 +1,34 @@
+@startuml
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequenceParticipantBackgroundColor #E8F0F8
+skinparam sequenceParticipantBorderColor #1F4E79
+skinparam sequenceLifeLineBorderColor #1F4E79
+skinparam sequenceActorBorderColor #1F4E79
+autonumber
+title UC05 - Consultar Empréstimos
+actor "Bibliotecário" as B
+participant "Interface\n(templates)" as UI
+participant "Controlador\n(app.py)" as C
+participant "EmprestimoRepository" as R
+participant "Emprestimo" as E
+database "SQLite" as DB
+B -> UI : Escolhe filtro (Todos/Ativos/Atrasados/Devolvidos)\ne digita busca
+UI -> C : GET /emprestimos?filtro=...&q=...
+C -> R : listar(filtro, busca)
+R -> DB : SELECT emprestimo JOIN livro JOIN leitor
+DB --> R : registros
+loop para cada registro
+  R -> E : cria Emprestimo
+  R -> E : esta_atrasado()
+end
+R --> C : lista filtrada
+C --> UI : renderiza tabela com status
+opt alterar prazo
+  B -> UI : Clica "Prazo" e informa nova data
+  UI -> C : POST /emprestimos/{id}/editar
+  C -> R : atualizar_prazo(id, data)
+  R -> DB : UPDATE data_prevista_devolucao
+end
+@enduml

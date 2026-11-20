@@ -1,0 +1,44 @@
+@startuml
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam activityBackgroundColor #E8F0F8
+skinparam activityBorderColor #1F4E79
+title Fluxo de empréstimo e devolução de livro
+|Bibliotecário|
+start
+:Acessar "Novo empréstimo";
+:Selecionar livro e leitor;
+:Confirmar registro;
+|Sistema|
+if (Livro tem exemplar disponível?) then (não)
+  :Exibir mensagem\n"sem exemplares disponíveis";
+  stop
+else (sim)
+endif
+if (Leitor possui empréstimo em atraso?) then (sim)
+  :Exibir mensagem de bloqueio por atraso;
+  stop
+else (não)
+endif
+if (Leitor atingiu 3 empréstimos ativos?) then (sim)
+  :Exibir mensagem de limite atingido;
+  stop
+else (não)
+endif
+:Gravar empréstimo com prazo de 14 dias;
+:Exibir confirmação;
+|Bibliotecário|
+:Entregar livro ao leitor;
+note right: Período do empréstimo
+:Receber livro devolvido;
+:Clicar em "Devolver";
+|Sistema|
+:Registrar data de devolução;
+if (Devolução após o prazo?) then (sim)
+  :Informar dias de atraso;
+else (não)
+endif
+:Exemplar volta a ficar disponível;
+stop
+@enduml

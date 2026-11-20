@@ -1,0 +1,39 @@
+@startuml
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequenceParticipantBackgroundColor #E8F0F8
+skinparam sequenceParticipantBorderColor #1F4E79
+skinparam sequenceLifeLineBorderColor #1F4E79
+skinparam sequenceActorBorderColor #1F4E79
+autonumber
+title UC01 - Gerenciar Livros (cadastrar / editar)
+actor "Bibliotecário" as B
+participant "Interface\n(templates)" as UI
+participant "Controlador\n(app.py)" as C
+participant "Livro" as L
+participant "LivroRepository" as R
+database "SQLite" as DB
+B -> UI : Preenche formulário do livro
+UI -> C : POST /livros/novo (ou /editar)
+C -> L : cria/atualiza objeto Livro
+C -> R : salvar(livro)
+R -> L : validar()
+alt dados inválidos ou ISBN duplicado
+  R --> C : RegraNegocioError
+  C --> UI : exibe mensagem de erro
+else dados válidos
+  R -> DB : INSERT / UPDATE livro
+  DB --> R : ok
+  R --> C : livro salvo
+  C --> UI : redireciona para lista + "Livro salvo"
+end
+== Consultar / Excluir ==
+B -> UI : Abre lista ou clica "Excluir"
+UI -> C : GET /livros  |  POST /livros/{id}/excluir
+C -> R : listar(busca) | excluir(id)
+R -> DB : SELECT / DELETE (se não houver empréstimos)
+DB --> R : resultado
+R --> C : livros | confirmação
+C --> UI : renderiza lista atualizada
+@enduml

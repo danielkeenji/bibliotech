@@ -1,0 +1,39 @@
+@startuml
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequenceParticipantBackgroundColor #E8F0F8
+skinparam sequenceParticipantBorderColor #1F4E79
+skinparam sequenceLifeLineBorderColor #1F4E79
+skinparam sequenceActorBorderColor #1F4E79
+autonumber
+title UC02 - Gerenciar Leitores (cadastrar / editar)
+actor "Bibliotecário" as B
+participant "Interface\n(templates)" as UI
+participant "Controlador\n(app.py)" as C
+participant "Leitor" as L
+participant "LeitorRepository" as R
+database "SQLite" as DB
+B -> UI : Preenche nome, CPF, e-mail e telefone
+UI -> C : POST /leitores/novo (ou /editar)
+C -> L : cria/atualiza objeto Leitor
+C -> R : salvar(leitor)
+R -> L : validar()
+alt CPF/e-mail inválido ou já cadastrado
+  R --> C : RegraNegocioError
+  C --> UI : exibe mensagem de erro
+else dados válidos
+  R -> DB : INSERT / UPDATE leitor
+  DB --> R : ok
+  R --> C : leitor salvo
+  C --> UI : redireciona para lista + "Leitor salvo"
+end
+== Consultar / Excluir ==
+B -> UI : Abre lista ou clica "Excluir"
+UI -> C : GET /leitores  |  POST /leitores/{id}/excluir
+C -> R : listar(busca) | excluir(id)
+R -> DB : SELECT / DELETE (se não houver empréstimos)
+DB --> R : resultado
+R --> C : leitores | confirmação
+C --> UI : renderiza lista atualizada
+@enduml

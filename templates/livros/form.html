@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar' if livro.id else 'Novo' }} livro{% endblock %}
+{% block conteudo %}
+<h1>{{ 'Editar' if livro.id else 'Novo' }} livro</h1>
+<form method="post" class="formulario">
+  <label>Título*<input name="titulo" value="{{ livro.titulo }}" required></label>
+  <label>Autor*<input name="autor" value="{{ livro.autor }}" required></label>
+  <label>ISBN* (10 ou 13 dígitos)<input name="isbn" value="{{ livro.isbn }}" required></label>
+  <label>Editora<input name="editora" value="{{ livro.editora }}"></label>
+  <div class="linha">
+    <label>Ano de publicação<input name="ano_publicacao" type="number" value="{{ livro.ano_publicacao or '' }}"></label>
+    <label>Quantidade de exemplares*<input name="quantidade_total" type="number" min="0" value="{{ livro.quantidade_total }}" required></label>
+  </div>
+  <div class="botoes"><button class="btn">Salvar</button><a href="{{ url_for('livros_listar') }}">Cancelar</a></div>
+</form>
+{% endblock %}

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}BiblioTech{% endblock %} · BiblioTech</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topo">
+    <a class="marca" href="{{ url_for('index') }}">📚 BiblioTech</a>
+    <nav>
+      <a href="{{ url_for('index') }}" class="{{ 'ativo' if request.endpoint == 'index' }}">Início</a>
+      <a href="{{ url_for('livros_listar') }}" class="{{ 'ativo' if request.endpoint.startswith('livros') }}">Livros</a>
+      <a href="{{ url_for('leitores_listar') }}" class="{{ 'ativo' if request.endpoint.startswith('leitores') }}">Leitores</a>
+      <a href="{{ url_for('emprestimos_listar') }}" class="{{ 'ativo' if request.endpoint.startswith('emprestimos') }}">Empréstimos</a>
+    </nav>
+  </header>
+  <main class="conteudo">
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+      {% for categoria, msg in mensagens %}<div class="alerta {{ categoria }}">{{ msg }}</div>{% endfor %}
+    {% endwith %}
+    {% block conteudo %}{% endblock %}
+  </main>
+  <footer class="rodape">BiblioTech · Projeto de Desenvolvimento de Software · UniFil</footer>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block titulo %}Início{% endblock %}
+{% block conteudo %}
+<h1>Painel</h1>
+<div class="cards">
+  <a class="card" href="{{ url_for('livros_listar') }}"><span>{{ total_livros }}</span>Livros cadastrados</a>
+  <a class="card" href="{{ url_for('leitores_listar') }}"><span>{{ total_leitores }}</span>Leitores</a>
+  <a class="card" href="{{ url_for('emprestimos_listar', filtro='ativos') }}"><span>{{ resumo.ativos }}</span>Empréstimos ativos</a>
+  <a class="card alerta-card" href="{{ url_for('emprestimos_listar', filtro='atrasados') }}"><span>{{ resumo.atrasados }}</span>Em atraso</a>
+</div>
+<div class="acoes-topo"><a class="btn" href="{{ url_for('emprestimos_novo') }}">+ Novo empréstimo</a></div>
+<h2>Empréstimos em atraso</h2>
+{% if atrasados %}
+<table>
+  <thead><tr><th>Livro</th><th>Leitor</th><th>Previsto</th><th>Atraso</th></tr></thead>
+  <tbody>{% for e in atrasados %}
+    <tr><td>{{ e.livro_titulo }}</td><td>{{ e.leitor_nome }}</td><td>{{ e.data_prevista_devolucao|data_br }}</td><td>{{ e.dias_atraso() }} dia(s)</td></tr>
+  {% endfor %}</tbody>
+</table>
+{% else %}<p class="vazio">Nenhum empréstimo em atraso. 🎉</p>{% endif %}
+{% endblock %}

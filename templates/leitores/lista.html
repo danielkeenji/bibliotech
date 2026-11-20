@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block titulo %}Leitores{% endblock %}
+{% block conteudo %}
+<div class="cabecalho"><h1>Leitores</h1><a class="btn" href="{{ url_for('leitores_form') }}">+ Novo leitor</a></div>
+<form class="busca"><input name="q" value="{{ busca }}" placeholder="Buscar por nome, CPF ou e-mail"><button>Buscar</button></form>
+{% if leitores %}
+<table>
+  <thead><tr><th>Nome</th><th>CPF</th><th>E-mail</th><th>Telefone</th><th></th></tr></thead>
+  <tbody>{% for r in leitores %}
+    <tr>
+      <td>{{ r.nome }}</td><td>{{ r.cpf }}</td><td>{{ r.email }}</td><td>{{ r.telefone or '—' }}</td>
+      <td class="acoes">
+        <a href="{{ url_for('leitores_form', leitor_id=r.id) }}">Editar</a>
+        <form method="post" action="{{ url_for('leitores_excluir', leitor_id=r.id) }}" onsubmit="return confirm('Excluir este leitor?')"><button class="link perigo">Excluir</button></form>
+      </td>
+    </tr>
+  {% endfor %}</tbody>
+</table>
+{% else %}<p class="vazio">Nenhum leitor encontrado.</p>{% endif %}
+{% endblock %}

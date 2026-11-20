@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block titulo %}Alterar prazo{% endblock %}
+{% block conteudo %}
+<h1>Alterar prazo de devolução</h1>
+<p><strong>{{ emp.livro_titulo }}</strong> · {{ emp.leitor_nome }} · emprestado em {{ emp.data_emprestimo|data_br }}</p>
+<form method="post" class="formulario">
+  <label>Nova data prevista<input type="date" name="data_prevista_devolucao" value="{{ emp.data_prevista_devolucao.isoformat() }}" required></label>
+  <div class="botoes"><button class="btn">Salvar</button><a href="{{ url_for('emprestimos_listar') }}">Cancelar</a></div>
+</form>
+{% endblock %}

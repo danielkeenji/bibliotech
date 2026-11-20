@@ -1,0 +1,34 @@
+@startuml
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequenceParticipantBackgroundColor #E8F0F8
+skinparam sequenceParticipantBorderColor #1F4E79
+skinparam sequenceLifeLineBorderColor #1F4E79
+skinparam sequenceActorBorderColor #1F4E79
+autonumber
+title UC04 - Registrar Devolução
+actor "Bibliotecário" as B
+participant "Interface\n(templates)" as UI
+participant "Controlador\n(app.py)" as C
+participant "EmprestimoRepository" as R
+participant "Emprestimo" as E
+database "SQLite" as DB
+B -> UI : Clica em "Devolver" no empréstimo
+UI -> C : POST /emprestimos/{id}/devolver
+C -> R : registrar_devolucao(id)
+R -> DB : SELECT emprestimo
+DB --> R : dados
+R -> E : registrar_devolucao(hoje)
+alt já devolvido
+  E --> R : RegraNegocioError
+  R --> C : erro
+  C --> UI : "Este empréstimo já foi devolvido"
+else em aberto
+  R -> DB : UPDATE data_devolucao
+  DB --> R : ok
+  R --> C : Emprestimo
+  C -> E : dias_atraso()
+  C --> UI : "Devolução registrada" (+ aviso de atraso)
+end
+@enduml

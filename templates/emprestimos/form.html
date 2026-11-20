@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block titulo %}Novo empréstimo{% endblock %}
+{% block conteudo %}
+<h1>Novo empréstimo</h1>
+<form method="post" class="formulario">
+  <label>Livro*
+    <select name="livro_id" required>
+      <option value="">Selecione…</option>
+      {% for l in livros %}<option value="{{ l.id }}">{{ l.titulo }} — {{ l.autor }} ({{ l.quantidade_disponivel }} disp.)</option>{% endfor %}
+    </select>
+  </label>
+  <label>Leitor*
+    <select name="leitor_id" required>
+      <option value="">Selecione…</option>
+      {% for r in leitores %}<option value="{{ r.id }}">{{ r.nome }} — {{ r.cpf }}</option>{% endfor %}
+    </select>
+  </label>
+  <p class="dica">Prazo de devolução: 14 dias. Limite de 3 empréstimos ativos por leitor; leitores com atraso ficam bloqueados.</p>
+  <div class="botoes"><button class="btn">Registrar</button><a href="{{ url_for('emprestimos_listar') }}">Cancelar</a></div>
+</form>
+{% endblock %}
