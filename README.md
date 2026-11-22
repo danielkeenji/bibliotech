@@ -31,6 +31,8 @@ O BiblioTech permite ao bibliotecário gerenciar o acervo de uma biblioteca: cad
 
 ## Como executar
 
+**Requisitos:** Python 3.10 ou superior.
+
 ```bash
 git clone https://github.com/danielkeenji/bibliotech.git
 cd bibliotech
